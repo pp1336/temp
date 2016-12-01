@@ -42,3 +42,17 @@ INSERT INTO ass VALUES(1, 3, 50);
 select * from ass;
 
 select profile.*, sum(weight) as weight_sum from (select p_id, weight from (select ID from KEYWORDS where KEYS in ('ASD', 'ZXC', 'BNM')) as new_keys inner join ass on new_keys.ID = ass.KEY_ID) as new_ass inner join profile on new_ass.p_id = profile.id group by profile.id order by weight_sum desc;
+
+// SQLAlchemy
+// get id from keywords table
+/*
+keyword_id = select([Keyword.id]).where(Keyword.id.in_(<keyword_list>)).alias()
+*/
+// join with keyword association
+/*
+ass_pid_weight = select([ProfileKeywordAssociation.left_id, ProfileKeywordAssociation.weight]).select_from(ProfileKeywordAssociation_id.join(keyword_id, ProfileKeywordAssociation.right_id == keyword_id.id)).alias()
+*/
+// sum
+/*
+list = session.query(Profile, func.sum(ass_pid_weight).label('total_weight')).join(ass_pid_weight, ass_pid_weight.left_id == Profile.id).group_by(Profile.id).order_by(func.sum(ass_pid_weight).desc()).all()
+*/
